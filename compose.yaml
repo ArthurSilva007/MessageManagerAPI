@@ -1,0 +1,72 @@
+services:
+  # Banco de Dados Relacional
+  postgres:
+    image: postgres:16-alpine
+    container_name: mensageria_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: mensageria_db
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - mensageria_network
+
+  # Cache e Armazenamento de Sessão do WhatsApp
+  redis:
+    image: redis:7.2-alpine
+    container_name: mensageria_redis
+    restart: always
+    command: redis-server --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - mensageria_network
+
+  # Mensageria e Controle de Fluxo
+  rabbitmq:
+    image: rabbitmq:3.13-management-alpine
+    container_name: mensageria_rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"   # Porta de comunicação da API
+      - "15672:15672" # Painel visual de gerenciamento (Acesse via navegador)
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - mensageria_network
+
+  # Servidor de Armazenamento de Mídias (S3 Compatible)
+  minio:
+    image: minio/minio
+    container_name: mensageria_minio
+    restart: always
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+    ports:
+      - "9000:9000" # API de comunicação
+      - "9001:9001" # Painel visual
+    volumes:
+      - minio_data:/data
+    networks:
+      - mensageria_network
+
+volumes:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
+  minio_data:
+
+networks:
+  mensageria_network:
+    driver: bridge
