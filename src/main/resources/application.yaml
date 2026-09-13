@@ -11,8 +11,8 @@ spring:
   # Configuração do banco de dados Reativo (Non-blocking)
   r2dbc:
     url: ${DB_URL:r2dbc:postgresql://localhost:5433/mensageria_db}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
     pool:
       max-size: 20
       initial-size: 5
@@ -21,16 +21,16 @@ spring:
   flyway:
     enabled: true
     url: ${DB_JDBC_URL:jdbc:postgresql://localhost:5433/mensageria_db}
-    user: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    user: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
     locations: classpath:db/migration
 
   # Configuração do RabbitMQ (Filas)
   rabbitmq:
     host: ${RABBITMQ_HOST:localhost}
     port: ${RABBITMQ_PORT:5672}
-    username: ${RABBITMQ_USERNAME}
-    password: ${RABBITMQ_PASSWORD}
+    username: ${RABBITMQ_USERNAME:mensageria}
+    password: ${RABBITMQ_PASSWORD:mensageria}
     listener:
       simple:
         retry:
@@ -43,14 +43,14 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD}
+      password: ${REDIS_PASSWORD:redispass}
       database: 0
 
 # Configurações do MinIO (Armazenamento de mídia)
 minio:
   url: ${MINIO_URL:http://localhost:9000}
-  access-key: ${MINIO_ACCESS_KEY}
-  secret-key: ${MINIO_SECRET_KEY}
+  access-key: ${MINIO_ACCESS_KEY:minioadmin}
+  secret-key: ${MINIO_SECRET_KEY:minioadmin123}
   bucket-name: mensageria-media
 
 # Configurações do Actuator (Monitoramento)

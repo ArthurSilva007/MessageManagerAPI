@@ -23,7 +23,7 @@ public class Client {
     private String name;
     private String email;
     private String password;
-    private String apikey;
+    private String apiKey;
     private String webhookUrl;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;

@@ -33,7 +33,7 @@ public class RedisSessionStore {
 
     // Remove as chaves quando o cliente clica em "Desconectar" ou quando a sessão expira
 
-    public Mono<Boolean> deleteSessionSkeys(UUID instanceId) {
+    public Mono<Boolean> deleteSessionkeys(UUID instanceId) {
         String key = SESSION_KEY_PREFIX + instanceId.toString();
         log.info("Removendo chaves de sessão do Redis para a instancia {}", instanceId);
         return redisTemplate.opsForValue().delete(key);
