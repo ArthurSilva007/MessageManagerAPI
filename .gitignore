@@ -2,6 +2,7 @@ HELP.md
 target/
 token/
 .env
+.env.example
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
